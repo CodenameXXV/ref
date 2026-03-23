@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Рефлексія уроку</title>
+<style>
+  :root {
+    --bg: #f5f3ef;
+    --card: #ffffff;
+    --text: #1e1c1a;
+    --muted: #6b6560;
+    --border: rgba(0,0,0,0.10);
+    --accent1: #4a7fc1;
+    --accent2: #3da874;
+    --accent3: #e07a3a;
+    --radius: 20px;
+  }
+
+  /* ✅ Збільшення масштабу за замовчуванням на 125% */
+  html { font-size: 125%; }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Georgia', serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── NAV BAR ── */
+  .nav {
+    position: sticky; top: 0; z-index: 100;
+    background: #1e1c1a;
+    display: flex; align-items: center; gap: 0;
+    padding: 0 24px;
+    height: 56px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .nav::-webkit-scrollbar { display: none; }
+
+  .nav-title {
+    color: #f0ebe3;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    margin-right: 24px;
+    padding-right: 24px;
+    border-right: 1px solid rgba(255,255,255,0.15);
+  }
+
+  .nav-btn {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.55);
+    font-family: 'Georgia', serif;
+    font-size: 0.88rem;
+    padding: 0 14px;
+    height: 56px;
+    cursor: pointer;
+    white-space: nowrap;
+    border-bottom: 3px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .nav-btn:hover { color: #fff; }
+  .nav-btn.active { color: #fff; border-bottom-color: #f0c060; }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, #1e3a5f 0%, #1a5c3e 50%, #5c2a10 100%);
+    color: #fff;
+    text-align: center;
+    padding: 60px 20px 50px;
+  }
+  .hero h1 {
+    font-size: clamp(2rem, 6vw, 3.5rem);
+    letter-spacing: 1px;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.3);
+    margin-bottom: 14px;
+  }
+  .hero p {
+    font-family: 'Trebuchet MS', sans-serif;
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
+    opacity: 0.85;
+    max-width: 600px;
+    margin: 0 auto 28px;
+  }
+
+  /* chip row in hero */
+  .chips {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;
+    max-width: 700px; margin: 0 auto;
+  }
+  .chip {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 30px;
+    padding: 6px 16px;
+    font-family: 'Trebuchet MS', sans-serif;
+    font-size: 0.9rem;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .chip:hover { background: rgba(255,255,255,0.28); transform: translateY(-1px); }
+
+  /* ── LANGUAGE SWITCHER ── */
+  .lang-switch {
+    position: absolute;
+    top: 16px;
+    right: 20px;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 24px;
+    padding: 4px;
+    display: flex;
+    gap: 4px;
+  }
+  .lang-btn {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.7);
+    font-family: 'Trebuchet MS', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .lang-btn:hover { color: #fff; background: rgba(255,255,255,0.1); }
+  .lang-btn.active {
+    background: #fff;
+    color: #1e1c1a;
+  }
+
+  /* ── PAGES ── */
+  .page { display: none; padding: 40px 20px 80px; max-width: 900px; margin: 0 auto; }
+  .page.active { display: block; }
+
+  /* ── SECTION HEADER ── */
+  .sec-head {
+    text-align: center;
+    margin-bottom: 36px;
+  }
+  .sec-head .icon { font-size: 3rem; display: block; margin-bottom: 10px; }
+  .sec-head h2 {
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .sec-head p {
+    font-family: 'Trebuchet MS', sans-serif;
+    font-size: 1rem;
+    color: var(--muted);
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  /* ── SENTENCE CARDS ── */
+  .sentence-list { display: flex; flex-direction: column; gap: 18px; }
+
+  .sentence-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    border: 1.5px solid var(--border);
+    padding: 26px 32px;
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    transition: box-shadow 0.2s;
+  }
+  .sentence-card:hover { box-shadow: 0 6px 24px rgba(0,0,0,0.08); }
+
+  .sentence-num {
+    min-width: 40px; height: 40px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Trebuchet MS', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    color: #fff;
+    flex-shrink: 0;
+  }
+
+  .sentence-text {
+    flex: 1;
+  }
+  .sentence-prefix {
+    font-size: 1.35rem;
+    color: var(--text);
+    line-height: 1.4;
+  }
+  .sentence-prefix .dots {
+    display: inline-block;
+    border-bottom: 2.5px dashed #c8b89a;
+    min-width: 180px;
+    margin-left: 6px;
+    color: transparent;
+  }
+  .sentence-hint {
+    font-family: 'Trebuchet MS', sans-serif;
+    font-size: 0.85rem;
+    color: #a09080;
+    margin-top: 6px;
+    font-style: italic;
+  }
+
+  /* Accent colors per sentence */
+  .sc-1 .sentence-num { background: #4a7fc1; }
+  .sc-2 .sentence-num { background: #3da874; }
+  .sc-3 .sentence-num { background: #e07a3a; }
+  .sc-4 .sentence-num { background: #9b5de5; }
+  .sc-5 .sentence-num { background: #d45d79; }
+  .sc-6 .sentence-num { background: #00bfa5; }
+  .sc-7 .sentence-num { background: #f4a261; }
+
+  /* ── PMI ── */
+  .pmi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+  }
+  .pmi-card {
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    text-align: center;
+    border: 2px solid transparent;
+  }
+  .pmi-icon { font-size: 2.8rem; display: block; margin-bottom: 14px; }
+  .pmi-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .pmi-desc {
+    font-family: 'Trebuchet MS', sans-serif;
+    font-size: 0.95rem;
+    line-height: 1.55;
+    color: inherit;
+    opacity: 0.8;
+  }
+  .pmi-card.plus    { background: #d8f5e3; border-color: #7ecfa0; color: #145c30; }
+  .pmi-card.minus   { background: #fde0e0; border-color: #f09898; color: #6b1515; }
+  .pmi-card.curious { background: #fef9d0; border-color: #e8d050; color: #5a4800; }
+
+  .pmi-example {
+    margin-top: 28px;
+    background: var(--card);
+    border-radius: 14px;
+    border: 1.5px solid var(--border);
+    padding: 20px 28px;
+  }
+  .pmi-example h3 {
+    font-family: 'Trebuchet MS', sans-serif;
+    font-size: 0.88rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+  .pmi-row { display: flex; flex-direction: column; gap: 10px; }
+  .pmi-eg-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    font-size: 1.05rem;
+    font-family: 'Trebuchet MS', sans-serif;
+  }
+  .pmi-badge {
+    min-width: 70px;
+    border-radius: 20px;
+    padding: 3px 10px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .pmi-badge.p { background: #d8f5e3; color: #145c30; }
+  .pmi-badge.m { background: #fde0e0; color: #6b1515; }
+  .pmi-badge.i { background: #fef9d0; color: #5a4800; }
+
+  /* ── TRAFFIC LIGHT ── */
+  .traffic-wrap {
+    display: flex; flex-direction: column; align-items: center; gap: 20px;
+  }
+  .traffic-pole {
+    background: #2a2a2a;
+    border-radius: 30px;
+    padding: 24px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+  }
+  .tl-light {
+    border-radius: 16px;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    cursor: pointer;
+    transition: transform 0.15s, opacity 0.2s;
+    border: 3px solid transparent;
+    opacity: 0.5;
+  }
+  .tl-light.lit { opacity: 1; border-color: rgba(255,255,255,0.4); transform: scale(1.02); }
+  .tl-dot {
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    box-shadow: inset 0 -4px 8px rgba(0,0,0,0.25);
+  }
+  .tl-green  { background: #1a3a24; }
+  .tl-yellow { background: #3a3010; }
+  .tl-red    { background: #3a1010; }
+  .tl-light.lit.tl-green  { background: #2c6040; }
+  .tl-light.lit.tl-yellow { background: #5a4800; }
+  .tl-light.lit.tl-red    { background: #6b1515; }
+  .dot-green  { background: radial-gradient(circle at 35% 35%, #a0f0a0, #28c050); }
+  .dot-yellow { background: radial-gradient(circle at 35% 35%, #ffffa0, #f0c000); }
+  .dot-red    { background: radial-gradient(circle at 35% 35%, #ffb0b0, #e03030); }
+  .tl-label {
+    color: #fff;
+    font-size: 1.05rem;
+    line-height: 1.4;
+  }
+  .tl-label strong { display: block; font-size: 1.2rem; margin-bottom: 3px; }
+
+  /* ── GROWTH ── */
+  .growth-cols {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+    margin-bottom: 28px;
+  }
+  .growth-box {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    border: 2px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .growth-box::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 5px;
+  }
+  .growth-box.before::before { background: #c8b8a0; }
+  .growth-box.after::before  { background: #3da874; }
+  .growth-tag {
+    font-family: 'Trebuchet MS', sans-serif;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 12px;
+    color: var(--muted);
+  }
+  .growth-box.after .growth-tag { color: #2a8050; }
+  .growth-question {
+    font-size: 1.25rem;
+    line-height: 1.5;
+    color: var(--text);
+  }
+  .growth-arrow {
+    text-align: center;
+    font-size: 2.5rem;
+    color: #3da874;
+    margin: 0 0 20px;
+  }
+
+  /* ── CINQUAIN ── */
+  .cinq-lines { display: flex; flex-direction: column; gap: 14px; max-width: 600px; margin: 0 auto; }
+  .cinq-row-item {
+    display: flex; align-items: center; gap: 16px;
+    background: var(--card);
+    border-radius: 14px;
+    border: 1.5px solid var(--border);
+    padding: 16px 22px;
+  }
+  .cinq-dot {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #fff;
+    flex-shrink: 0;
+  }
+  .cinq-rule {
+    flex: 1;
+    font-size: 1.05rem;
+    color: var(--text);
+  }
+  .cinq-rule span {
+    font-family: 'Trebuchet MS', sans-serif;
+    font-size: 0.85rem;
+    color: var(--muted);
+    display: block;
+    margin-top: 2px;
+  }
+  .cinq-dot-1 { background: #4a7fc1; }
+  .cinq-dot-2 { background: #9b5de5; }
+  .cinq-dot-3 { background: #3da874; }
+  .cinq-dot-4 { background: #e07a3a; }
+  .cinq-dot-5 { background: #d45d79; }
+
+  .cinq-example {
+    margin-top: 28px;
+    background: var(--card);
+    border-radius: var(--radius);
+    border: 1.5px solid var(--border);
+    padding: 24px 28px;
+    text-align: center;
+  }
+  .cinq-example h3 {
+    font-family: 'Trebuchet MS', sans-serif;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+  .cinq-poem { display: flex; flex-direction: column; gap: 8px; }
+  .cinq-poem-line {
+    font-size: 1.15rem;
+    color: var(--text);
+    padding: 4px 0;
+  }
+
+  /* ── THREE MOMENTS ── */
+  .moments-list { display: flex; flex-direction: column; gap: 20px; }
+  .moment-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    border: 1.5px solid var(--border);
+    padding: 26px 32px;
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  .moment-icon {
+    font-size: 2.4rem;
+    flex-shrink: 0;
+    width: 54px;
+    text-align: center;
+  }
+  .moment-content h3 { font-size: 1.2rem; margin-bottom: 6px; }
+  .moment-content p {
+    font-family: 'Trebuchet MS', sans-serif;
+    font-size: 0.95rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .moment-content .ex {
+    font-size: 1rem;
+    color: var(--text);
+    font-style: italic;
+    margin-top: 8px;
+    border-left: 3px solid #e0d8cc;
+    padding-left: 12px;
+    font-family: 'Georgia', serif;
+  }
+
+  /* ── TAG CLOUD ── */
+  .tag-cloud-wrap {
+    background: var(--card);
+    border-radius: var(--radius);
+    border: 1.5px solid var(--border);
+    padding: 40px 32px;
+    text-align: center;
+  }
+  .cloud-title {
+    font-family: 'Trebuchet MS', sans-serif;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+  #tag-display {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 12px;
+    margin-bottom: 28px;
+  }
+  .cloud-tag {
+    border-radius: 30px;
+    padding: 8px 20px;
+    font-family: 'Trebuchet MS', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.15s;
+    border: 2px solid transparent;
+  }
+  .cloud-tag:hover { transform: scale(1.08); }
+
+  /* tag color variants */
+  .tc-0 { background: #dbeafe; color: #1e40af; border-color: #93c5fd; }
+  .tc-1 { background: #dcfce7; color: #166534; border-color: #86efac; }
+  .tc-2 { background: #fef9c3; color: #854d0e; border-color: #fde047; }
+  .tc-3 { background: #fce7f3; color: #9d174d; border-color: #f9a8d4; }
+  .tc-4 { background: #ede9fe; color: #5b21b6; border-color: #c4b5fd; }
+  .tc-5 { background: #ffedd5; color: #9a3412; border-color: #fdba74; }
+  .tc-6 { background: #d1fae5; color: #065f46; border-color: #6ee7b7; }
+  .tc-7 { background: #fee2e2; color: #991b1b; border-color: #fca5a5; }
+
+  .tag-input-row {
+    display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;
+    max-width: 500px; margin: 0 auto;
+  }
+  #tag-input {
+    flex: 1; min-width: 200px;
+    border: 1.5px solid var(--border);
+    border-radius: 30px;
+    padding: 10px 18px;
+    font-family: 'Trebuchet MS', sans-serif;
+    font-size: 0.97rem;
+    background: var(--bg);
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  #tag-input:focus { border-color: #4a7fc1; }
+  .tag-add-btn {
+    background: #1e1c1a;
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    padding: 10px 22px;
+    font-family: 'Trebuchet MS', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .tag-add-btn:hover { background: #3a3630; transform: translateY(-1px); }
+  .tag-clear-btn {
+    background: none;
+    border: 1.5px solid var(--border);
+    border-radius: 30px;
+    padding: 10px 18px;
+    font-family: 'Trebuchet MS', sans-serif;
+    font-size: 0.87rem;
+    color: var(--muted);
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .tag-clear-btn:hover { background: #f0ebe3; }
+
+  /* ── HOME PAGE ── */
+  .methods-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 18px;
+    margin-top: 28px;
+  }
+  .method-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    border: 1.5px solid var(--border);
+    padding: 24px 22px;
+    cursor: pointer;
+    transition: box-shadow 0.2s, transform 0.15s;
+    text-align: center;
+  }
+  .method-card:hover {
+    box-shadow: 0 8px 28px rgba(0,0,0,0.09);
+    transform: translateY(-2px);
+  }
+  .method-card .m-icon { font-size: 2.4rem; display: block; margin-bottom: 12px; }
+  .method-card h3 { font-size: 1.05rem; margin-bottom: 6px; }
+  .method-card p {
+    font-family: 'Trebuchet MS', sans-serif;
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* ── FULLSCREEN hint ── */
+  .fs-hint {
+    text-align: center;
+    font-family: 'Trebuchet MS', sans-serif;
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.5);
+    margin-top: 18px;
+  }
+  
+	  /* ── FOOTER ── */
+	.site-footer {
+	  text-align: center;
+	  padding: 24px 20px 40px;
+	  color: var(--muted);
+	  font-family: 'Trebuchet MS', sans-serif;
+	  font-size: 0.75rem;
+	  background: transparent;
+	}
+	.site-footer a {
+	  color: var(--accent1);
+	  text-decoration: none;
+	  font-weight: 600;
+	  transition: color 0.2s;
+	}
+	.site-footer a:hover {
+	  color: var(--accent3);
+	  text-decoration: underline;
+	}
+	.site-footer .author {
+	  display: inline-flex;
+	  align-items: center;
+	  gap: 6px;
+	  opacity: 0.9;
+	}
+	.site-footer .author::before {
+	  content: "©";
+	  font-weight: 700;
+	  color: var(--text);
+	}
+
+  @media (max-width: 600px) {
+    .sentence-card { flex-direction: column; gap: 12px; padding: 18px 18px; }
+    .sentence-prefix { font-size: 1.15rem; }
+    .pmi-grid { grid-template-columns: 1fr; }
+    .growth-cols { grid-template-columns: 1fr; }
+    .moment-card { flex-direction: column; gap: 10px; padding: 18px 18px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── HERO ── -->
+<header class="hero">
+  <!-- Language Switcher -->
+  <div class="lang-switch">
+    <button class="lang-btn active" data-lang="uk" onclick="setLanguage('uk')">UA</button>
+    <button class="lang-btn" data-lang="en" onclick="setLanguage('en')">EN</button>
+  </div>
+
+  <h1 data-i18n="hero.title">🌟 Рефлексія уроку</h1>
+  <div class="chips">
+    <span class="chip" onclick="show('sentences')" data-i18n="chip.sentences">✏️ Закінчи речення</span>
+    <span class="chip" onclick="show('pmi')" data-i18n="chip.pmi">➕ Плюс–Мінус–Цікаво</span>
+    <span class="chip" onclick="show('traffic')" data-i18n="chip.traffic">🚦 Світлофор</span>
+    <span class="chip" onclick="show('growth')" data-i18n="chip.growth">📈 Приріст знань</span>
+    <span class="chip" onclick="show('cinquain')" data-i18n="chip.cinquain">🖊️ Синквейн</span>
+    <span class="chip" onclick="show('moments')" data-i18n="chip.moments">💎 Три моменти</span>
+    <span class="chip" onclick="show('tags')" data-i18n="chip.tags">☁️ Хмаринка тегів</span>
+  </div>
+  <p class="fs-hint"><br>
+    <span data-i18n="hero.fullscreen">Натисніть F11 для повноекранного режиму</span>&nbsp;&nbsp;</p>
+  <p class="fs-hint" data-i18n="hero.instruction">Оберіть метод вище і працюйте</p>
+</header>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- PAGE: HOME -->
+<!-- ══════════════════════════════════════════════════ -->
+<section class="page active" id="page-home">
+  <div class="sec-head">
+    <h2 data-i18n="home.title">Оберіть метод рефлексії</h2>
+    <p data-i18n="home.desc">Кожен метод — окремий спосіб проаналізувати урок. Вчитель показує — учні відповідають усно або в зошиті.</p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- PAGE: SENTENCES -->
+<!-- ══════════════════════════════════════════════════ -->
+<section class="page" id="page-sentences">
+  <div class="sec-head">
+    <span class="icon">✏️</span>
+    <h2 data-i18n="sentences.title">Закінчи речення</h2>
+    <p data-i18n="sentences.desc">Продовжуй кожне речення своїми словами — вголос, у зошиті або в думках.</p>
+  </div>
+  <div class="sentence-list">
+
+    <div class="sentence-card sc-1">
+      <div class="sentence-num">1</div>
+      <div class="sentence-text">
+        <div class="sentence-prefix"><span data-i18n="sentences.s1">Сьогодні я дізнався(-лась)...</span> <span class="dots">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
+        <div class="sentence-hint" data-i18n="sentences.s1.hint">Що нового ти дізнався(-лась) на цьому уроці?</div>
+      </div>
+    </div>
+
+    <div class="sentence-card sc-2">
+      <div class="sentence-num">2</div>
+      <div class="sentence-text">
+        <div class="sentence-prefix"><span data-i18n="sentences.s2">Тепер я можу...</span> <span class="dots">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
+        <div class="sentence-hint" data-i18n="sentences.s2.hint">Яке нове вміння або навичку ти набув(-ла)?</div>
+      </div>
+    </div>
+
+    <div class="sentence-card sc-3">
+      <div class="sentence-num">3</div>
+      <div class="sentence-text">
+        <div class="sentence-prefix"><span data-i18n="sentences.s3">Я не знав(-ла)..., а тепер знаю...</span> <span class="dots">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
+        <div class="sentence-hint" data-i18n="sentences.s3.hint">Порівняй своє розуміння «до» і «після» уроку.</div>
+      </div>
+    </div>
+
+    <div class="sentence-card sc-4">
+      <div class="sentence-num">4</div>
+      <div class="sentence-text">
+        <div class="sentence-prefix"><span data-i18n="sentences.s4">Я відкрив(-ла) для себе...</span> <span class="dots">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
+        <div class="sentence-hint" data-i18n="sentences.s4.hint">Яка ідея або факт здивував(-ла) тебе найбільше?</div>
+      </div>
+    </div>
+
+    <div class="sentence-card sc-5">
+      <div class="sentence-num">5</div>
+      <div class="sentence-text">
+        <div class="sentence-prefix"><span data-i18n="sentences.s5">Я змінив(-ла) свою думку про...</span> <span class="dots">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
+        <div class="sentence-hint" data-i18n="sentences.s5.hint">Що ти думав(-ла) раніше і що думаєш тепер?</div>
+      </div>
+    </div>
+
+    <div class="sentence-card sc-6">
+      <div class="sentence-num">6</div>
+      <div class="sentence-text">
+        <div class="sentence-prefix"><span data-i18n="sentences.s6">Найбільше мені сподобалось...</span> <span class="dots">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
+        <div class="sentence-hint" data-i18n="sentences.s6.hint">Який момент уроку запам'ятався найкраще?</div>
+      </div>
+    </div>
+
+    <div class="sentence-card sc-7">
+      <div class="sentence-num">7</div>
+      <div class="sentence-text">
+        <div class="sentence-prefix"><span data-i18n="sentences.s7">Я хочу дізнатись більше про...</span> <span class="dots">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
+        <div class="sentence-hint" data-i18n="sentences.s7.hint">Що зацікавило тебе і що хочеться дослідити далі?</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- PAGE: PMI -->
+<!-- ══════════════════════════════════════════════════ -->
+<section class="page" id="page-pmi">
+  <div class="sec-head">
+    <span class="icon">🔀</span>
+    <h2 data-i18n="pmi.title">Плюс – Мінус – Цікаво</h2>
+    <p data-i18n="pmi.desc">Поглянь на урок з трьох різних боків. Будь чесним(-ою)!</p>
+  </div>
+
+  <div class="pmi-grid">
+    <div class="pmi-card plus">
+      <span class="pmi-icon">👍</span>
+      <div class="pmi-title" data-i18n="pmi.plus.title">Плюс</div>
+      <div class="pmi-desc" data-i18n="pmi.plus.desc">Що на уроці було добре, корисно або цікаво? Що сподобалось?</div>
+    </div>
+    <div class="pmi-card minus">
+      <span class="pmi-icon">👎</span>
+      <div class="pmi-title" data-i18n="pmi.minus.title">Мінус</div>
+      <div class="pmi-desc" data-i18n="pmi.minus.desc">Що було незрозумілим, важким або нецікавим?</div>
+    </div>
+    <div class="pmi-card curious">
+      <span class="pmi-icon">🤔</span>
+      <div class="pmi-title" data-i18n="pmi.curious.title">Цікаво</div>
+      <div class="pmi-desc" data-i18n="pmi.curious.desc">Що тебе здивувало? Що хочеш дізнатись більше? Яке питання залишилось?</div>
+    </div>
+  </div>
+
+  <div class="pmi-example">
+    <h3 data-i18n="pmi.example.title">Приклади відповідей</h3>
+    <div class="pmi-row">
+      <div class="pmi-eg-item">
+        <span class="pmi-badge p">👍 <span data-i18n="pmi.plus.title">Плюс</span></span>
+        <span data-i18n="pmi.example.plus">Мені сподобалось...</span>
+      </div>
+      <div class="pmi-eg-item">
+        <span class="pmi-badge m">👎 <span data-i18n="pmi.minus.title">Мінус</span></span>
+        <span data-i18n="pmi.example.minus">Було важко зрозуміти...</span>
+      </div>
+      <div class="pmi-eg-item">
+        <span class="pmi-badge i">🤔 <span data-i18n="pmi.curious.title">Цікаво</span></span>
+        <span data-i18n="pmi.example.curious">Цікаво, а як...?</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- PAGE: TRAFFIC LIGHT -->
+<!-- ══════════════════════════════════════════════════ -->
+<section class="page" id="page-traffic">
+  <div class="sec-head">
+    <span class="icon">🚦</span>
+    <h2 data-i18n="traffic.title">Світлофор навчання</h2>
+    <p data-i18n="traffic.desc">Обери колір, який найточніше описує твоє розуміння теми зараз.</p>
+  </div>
+  <div class="traffic-wrap">
+    <div class="traffic-pole">
+      <div class="tl-light tl-green" onclick="lightUp('green')" id="tl-green">
+        <div class="tl-dot dot-green"></div>
+        <div class="tl-label">
+          <strong data-i18n="traffic.green.title">Зелений</strong>
+          <span data-i18n="traffic.green.desc">Я все розумію і можу пояснити це іншим</span>
+        </div>
+      </div>
+      <div class="tl-light tl-yellow" onclick="lightUp('yellow')" id="tl-yellow">
+        <div class="tl-dot dot-yellow"></div>
+        <div class="tl-label">
+          <strong data-i18n="traffic.yellow.title">Жовтий</strong>
+          <span data-i18n="traffic.yellow.desc">Частину розумію, але є запитання</span>
+        </div>
+      </div>
+      <div class="tl-light tl-red" onclick="lightUp('red')" id="tl-red">
+        <div class="tl-dot dot-red"></div>
+        <div class="tl-label">
+          <strong data-i18n="traffic.red.title">Червоний</strong>
+          <span data-i18n="traffic.red.desc">Потрібна допомога — багато незрозумілого</span>
+        </div>
+      </div>
+    </div>
+    <p id="tl-msg" style="font-family:'Trebuchet MS',sans-serif; font-size:1rem; color:var(--muted); text-align:center; max-width:440px; min-height:2em;"></p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- PAGE: KNOWLEDGE GROWTH -->
+<!-- ══════════════════════════════════════════════════ -->
+<section class="page" id="page-growth">
+  <div class="sec-head">
+    <span class="icon">📈</span>
+    <h2 data-i18n="growth.title">Приріст знань</h2>
+    <p data-i18n="growth.desc">Порівняй себе «до» і «після» уроку — відчуй, як ти виріс (-ла)!</p>
+  </div>
+
+  <div class="growth-cols">
+    <div class="growth-box before">
+      <div class="growth-tag" data-i18n="growth.before">До уроку</div>
+      <div class="growth-question" data-i18n="growth.before.q">«Що я НЕ знав(-ла) / не вмів(-ла) на початку уроку?»</div>
+    </div>
+    <div class="growth-box after">
+      <div class="growth-tag" data-i18n="growth.after">Після уроку</div>
+      <div class="growth-question" data-i18n="growth.after.q">«Що я знаю / вмію ЗАРАЗ після уроку?»</div>
+    </div>
+  </div>
+  <div class="growth-arrow">↑</div>
+
+  <div class="pmi-example">
+    <h3 data-i18n="growth.example.title">Приклад відповіді</h3>
+    <div style="display:flex; flex-direction:column; gap:12px;">
+      <div class="pmi-eg-item">
+        <span class="pmi-badge" style="background:#f0ebe3; color:#5a4030; border:1px solid #c8b8a0; border-radius:20px; padding:3px 10px; font-size:0.8rem; font-weight:700; min-width:70px; text-align:center; flex-shrink:0;" data-i18n="growth.before">До</span>
+        <span style="font-family:'Trebuchet MS',sans-serif;" data-i18n="growth.example.before">Я не знав(-ла), що таке ...</span>
+      </div>
+      <div class="pmi-eg-item">
+        <span class="pmi-badge" style="background:#d8f5e3; color:#145c30; border:1px solid #7ecfa0; border-radius:20px; padding:3px 10px; font-size:0.8rem; font-weight:700; min-width:70px; text-align:center; flex-shrink:0;" data-i18n="growth.after">Після</span>
+        <span style="font-family:'Trebuchet MS',sans-serif;" data-i18n="growth.example.after">Тепер я знаю, що ...</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- PAGE: CINQUAIN -->
+<!-- ══════════════════════════════════════════════════ -->
+<section class="page" id="page-cinquain">
+  <div class="sec-head">
+    <span class="icon">🖊️</span>
+    <h2 data-i18n="cinquain.title">Синквейн про урок</h2>
+    <p data-i18n="cinquain.desc">Склади п'ятирядковий вірш-підсумок. Це творчо та допомагає впорядкувати думки!</p>
+  </div>
+
+  <div class="cinq-lines">
+    <div class="cinq-row-item">
+      <div class="cinq-dot cinq-dot-1">1</div>
+      <div class="cinq-rule">
+        <span data-i18n="cinquain.r1">Одне ключове слово — тема уроку</span>
+        <span><span data-i18n="cinquain.example">Наприклад</span>: <em>Фотосинтез</em></span>
+      </div>
+    </div>
+    <div class="cinq-row-item">
+      <div class="cinq-dot cinq-dot-2">2</div>
+      <div class="cinq-rule">
+        <span data-i18n="cinquain.r2">Два слова-прикметники — опис теми</span>
+        <span><span data-i18n="cinquain.example">Наприклад</span>: <em>складний, дивовижний</em></span>
+      </div>
+    </div>
+    <div class="cinq-row-item">
+      <div class="cinq-dot cinq-dot-3">3</div>
+      <div class="cinq-rule">
+        <span data-i18n="cinquain.r3">Три слова-дії — що відбувається</span>
+        <span><span data-i18n="cinquain.example">Наприклад</span>: <em>вбирає, перетворює, дає</em></span>
+      </div>
+    </div>
+    <div class="cinq-row-item">
+      <div class="cinq-dot cinq-dot-4">4</div>
+      <div class="cinq-rule">
+        <span data-i18n="cinquain.r4">Фраза з 4–5 слів — головна думка</span>
+        <span><span data-i18n="cinquain.example">Наприклад</span>: <em>Рослини живляться за допомогою світла</em></span>
+      </div>
+    </div>
+    <div class="cinq-row-item">
+      <div class="cinq-dot cinq-dot-5">5</div>
+      <div class="cinq-rule">
+        <span data-i18n="cinquain.r5">Одне слово-підсумок</span>
+        <span><span data-i18n="cinquain.example">Наприклад</span>: <em>Життя</em></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="cinq-example">
+    <h3 data-i18n="cinquain.example.title">Приклад синквейну</h3>
+    <div class="cinq-poem">
+      <div class="cinq-poem-line" style="font-size:1.5rem; font-weight:700; color:#4a7fc1;">Фотосинтез</div>
+      <div class="cinq-poem-line" style="color:#9b5de5;">Складний, дивовижний</div>
+      <div class="cinq-poem-line" style="color:#3da874;">Вбирає, перетворює, дає</div>
+      <div class="cinq-poem-line" style="color:#e07a3a; font-style:italic;">Рослини живляться за допомогою світла</div>
+      <div class="cinq-poem-line" style="font-size:1.5rem; font-weight:700; color:#d45d79;">Життя</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- PAGE: THREE MOMENTS -->
+<!-- ══════════════════════════════════════════════════ -->
+<section class="page" id="page-moments">
+  <div class="sec-head">
+    <span class="icon">💎</span>
+    <h2 data-i18n="moments.title">Три важливі моменти</h2>
+    <p data-i18n="moments.desc">Пригадай і назви три моменти уроку: два серйозних і один веселий або незвичний.</p>
+  </div>
+
+  <div class="moments-list">
+    <div class="moment-card">
+      <div class="moment-icon">1️⃣</div>
+      <div class="moment-content">
+        <h3 data-i18n="moments.m1.title">Перший важливий момент</h3>
+        <p data-i18n="moments.m1.desc">Що головне ти зрозумів(-ла) або навчився(-лась) сьогодні?</p>
+        <div class="ex" data-i18n="moments.m1.ex">«Я зрозумів(-ла), що...»</div>
+      </div>
+    </div>
+    <div class="moment-card">
+      <div class="moment-icon">2️⃣</div>
+      <div class="moment-content">
+        <h3 data-i18n="moments.m2.title">Другий важливий момент</h3>
+        <p data-i18n="moments.m2.desc">Яка ще ідея, факт або навичка запам'яталась тобі сьогодні?</p>
+        <div class="ex" data-i18n="moments.m2.ex">«Я навчився ...»</div>
+      </div>
+    </div>
+    <div class="moment-card">
+      <div class="moment-icon">😄</div>
+      <div class="moment-content">
+        <h3 data-i18n="moments.m3.title">Цікавий або веселий момент</h3>
+        <p data-i18n="moments.m3.desc">Що тебе здивувало, розсмішило або запам'яталось як незвичне?</p>
+        <div class="ex" data-i18n="moments.m3.ex">«Коли з'ясувалось, що мурашки можуть підняти в 50 разів більше власної ваги — це неймовірно!»</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- PAGE: TAGS -->
+<!-- ══════════════════════════════════════════════════ -->
+<section class="page" id="page-tags">
+  <div class="sec-head">
+    <span class="icon">☁️</span>
+    <h2 data-i18n="tags.title">Хмаринка тегів</h2>
+    <p data-i18n="tags.desc">Клас разом складає хмаринку слів про урок. Вчитель додає слова від учнів — і хмаринка росте!</p>
+  </div>
+
+  <div class="tag-cloud-wrap">
+    <div class="cloud-title" data-i18n="tags.cloudTitle">Слова про сьогоднішній урок</div>
+    <div id="tag-display">
+      <!-- tags appear here -->
+      <div style="color:var(--muted); font-family:'Trebuchet MS',sans-serif; font-size:0.95rem; padding:20px 0;" data-i18n="tags.empty">
+        Почни додавати слова — і тут з'явиться хмаринка ☁️
+      </div>
+    </div>
+    <div class="tag-input-row">
+      <input type="text" id="tag-input" data-i18n-placeholder="tags.inputPlaceholder" placeholder="Введи слово і натисни +" maxlength="40"
+        onkeydown="if(event.key==='Enter') addTag()" />
+      <button class="tag-add-btn" onclick="addTag()">+ <span data-i18n="tags.add">Додати</span></button>
+      <button class="tag-clear-btn" onclick="clearTags()" data-i18n="tags.clear">Очистити</button>
+    </div>
+  </div>
+
+  <div class="pmi-example" style="margin-top:24px;">
+    <h3 data-i18n="tags.exampleTitle">Приклади слів-тегів</h3>
+    <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:8px;">
+      <span style="font-family:'Trebuchet MS',sans-serif; font-size:0.95rem; color:var(--text);" data-i18n="tags.examples">цікаво · складно · зрозуміло · корисно · несподівано · команда · відкриття · важко · весело · здивування · новинка · думки · питання · ясно · творчість</span>
+    </div>
+  </div>
+</section>
+
+<script>
+  // ── TRANSLATIONS ──
+  const translations = {
+    uk: {
+      "hero.title": "🌟 Рефлексія уроку",
+      "chip.sentences": "✏️ Закінчи речення",
+      "chip.pmi": "➕ Плюс–Мінус–Цікаво",
+      "chip.traffic": "🚦 Світлофор",
+      "chip.growth": "📈 Приріст знань",
+      "chip.cinquain": "🖊️ Синквейн",
+      "chip.moments": "💎 Три моменти",
+      "chip.tags": "☁️ Хмаринка тегів",
+      "hero.fullscreen": "Натисніть F11 для повноекранного режиму",
+      "hero.instruction": "Оберіть метод вище і працюйте",
+      "home.title": "Оберіть метод рефлексії",
+      "home.desc": "Кожен метод — окремий спосіб проаналізувати урок. Вчитель показує — учні відповідають усно або в зошиті.",
+      "sentences.title": "Закінчи речення",
+      "sentences.desc": "Продовжуй кожне речення своїми словами — вголос, у зошиті або в думках.",
+      "sentences.s1": "Сьогодні я дізнався(-лась)...",
+      "sentences.s1.hint": "Що нового ти дізнався(-лась) на цьому уроці?",
+      "sentences.s2": "Тепер я можу...",
+      "sentences.s2.hint": "Яке нове вміння або навичку ти набув(-ла)?",
+      "sentences.s3": "Я не знав(-ла)..., а тепер знаю...",
+      "sentences.s3.hint": "Порівняй своє розуміння «до» і «після» уроку.",
+      "sentences.s4": "Я відкрив(-ла) для себе...",
+      "sentences.s4.hint": "Яка ідея або факт здивував(-ла) тебе найбільше?",
+      "sentences.s5": "Я змінив(-ла) свою думку про...",
+      "sentences.s5.hint": "Що ти думав(-ла) раніше і що думаєш тепер?",
+      "sentences.s6": "Найбільше мені сподобалось...",
+      "sentences.s6.hint": "Який момент уроку запам'ятався найкраще?",
+      "sentences.s7": "Я хочу дізнатись більше про...",
+      "sentences.s7.hint": "Що зацікавило тебе і що хочеться дослідити далі?",
+      "pmi.title": "Плюс – Мінус – Цікаво",
+      "pmi.desc": "Поглянь на урок з трьох різних боків. Будь чесним(-ою)!",
+      "pmi.plus.title": "Плюс",
+      "pmi.plus.desc": "Що на уроці було добре, корисно або цікаво? Що сподобалось?",
+      "pmi.minus.title": "Мінус",
+      "pmi.minus.desc": "Що було незрозумілим, важким або нецікавим?",
+      "pmi.curious.title": "Цікаво",
+      "pmi.curious.desc": "Що тебе здивувало? Що хочеш дізнатись більше? Яке питання залишилось?",
+      "pmi.example.title": "Приклади відповідей",
+      "pmi.example.plus": "Мені сподобалось...",
+      "pmi.example.minus": "Було важко зрозуміти...",
+      "pmi.example.curious": "Цікаво, а як...?",
+      "traffic.title": "Світлофор навчання",
+      "traffic.desc": "Обери колір, який найточніше описує твоє розуміння теми зараз.",
+      "traffic.green.title": "Зелений",
+      "traffic.green.desc": "Я все розумію і можу пояснити це іншим",
+      "traffic.yellow.title": "Жовтий",
+      "traffic.yellow.desc": "Частину розумію, але є запитання",
+      "traffic.red.title": "Червоний",
+      "traffic.red.desc": "Потрібна допомога — багато незрозумілого",
+      "traffic.msg.green": "🟢 Чудово! Ти впевнено засвоїв(-ла) тему. Може, допомогти однокласникам?",
+      "traffic.msg.yellow": "🟡 Добре! Запиши своє запитання — і попроси вчителя пояснити ще раз.",
+      "traffic.msg.red": "🔴 Не переживай! Звернись до вчителя або однокласників — разом розберемось.",
+      "growth.title": "Приріст знань",
+      "growth.desc": "Порівняй себе «до» і «після» уроку — відчуй, як ти виріс (-ла)!",
+      "growth.before": "До уроку",
+      "growth.before.q": "«Що я НЕ знав(-ла) / не вмів(-ла) на початку уроку?»",
+      "growth.after": "Після уроку",
+      "growth.after.q": "«Що я знаю / вмію ЗАРАЗ після уроку?»",
+      "growth.example.title": "Приклад відповіді",
+      "growth.example.before": "Я не знав(-ла), що таке ...",
+      "growth.example.after": "Тепер я знаю, що ...",
+      "cinquain.title": "Синквейн про урок",
+      "cinquain.desc": "Склади п'ятирядковий вірш-підсумок. Це творчо та допомагає впорядкувати думки!",
+      "cinquain.r1": "Одне ключове слово — тема уроку",
+      "cinquain.r2": "Два слова-прикметники — опис теми",
+      "cinquain.r3": "Три слова-дії — що відбувається",
+      "cinquain.r4": "Фраза з 4–5 слів — головна думка",
+      "cinquain.r5": "Одне слово-підсумок",
+      "cinquain.example": "Наприклад",
+      "cinquain.example.title": "Приклад синквейну",
+      "moments.title": "Три важливі моменти",
+      "moments.desc": "Пригадай і назви три моменти уроку: два серйозних і один веселий або незвичний.",
+      "moments.m1.title": "Перший важливий момент",
+      "moments.m1.desc": "Що головне ти зрозумів(-ла) або навчився(-лась) сьогодні?",
+      "moments.m1.ex": "«Я зрозумів(-ла), що...»",
+      "moments.m2.title": "Другий важливий момент",
+      "moments.m2.desc": "Яка ще ідея, факт або навичка запам'яталась тобі сьогодні?",
+      "moments.m2.ex": "«Я навчився ...»",
+      "moments.m3.title": "Цікавий або веселий момент",
+      "moments.m3.desc": "Що тебе здивувало, розсмішило або запам'яталось як незвичне?",
+      "moments.m3.ex": "«Коли з'ясувалось, що мурашки можуть підняти в 50 разів більше власної ваги — це неймовірно!»",
+      "tags.title": "Хмаринка тегів",
+      "tags.desc": "Клас разом складає хмаринку слів про урок. Вчитель додає слова від учнів — і хмаринка росте!",
+      "tags.cloudTitle": "Слова про сьогоднішній урок",
+      "tags.empty": "Почни додавати слова — і тут з'явиться хмаринка ☁️",
+      "tags.inputPlaceholder": "Введи слово і натисни +",
+      "tags.add": "Додати",
+      "tags.clear": "Очистити",
+      "tags.exampleTitle": "Приклади слів-тегів",
+      "tags.examples": "цікаво · складно · зрозуміло · корисно · несподівано · команда · відкриття · важко · весело · здивування · новинка · думки · питання · ясно · творчість"
+    },
+    en: {
+      "hero.title": "🌟 Lesson Reflection",
+      "chip.sentences": "✏️ Finish the Sentence",
+      "chip.pmi": "➕ Plus–Minus–Interesting",
+      "chip.traffic": "🚦 Traffic Light",
+      "chip.growth": "📈 Knowledge Growth",
+      "chip.cinquain": "🖊️ Cinquain",
+      "chip.moments": "💎 Three Moments",
+      "chip.tags": "☁️ Tag Cloud",
+      "hero.fullscreen": "Press F11 for fullscreen mode",
+      "hero.instruction": "Choose a method above and start",
+      "home.title": "Choose a Reflection Method",
+      "home.desc": "Each method is a unique way to analyze the lesson. The teacher presents — students respond orally or in writing.",
+      "sentences.title": "Finish the Sentence",
+      "sentences.desc": "Continue each sentence in your own words — aloud, in your notebook, or in your thoughts.",
+      "sentences.s1": "Today I learned...",
+      "sentences.s1.hint": "What new thing did you learn in this lesson?",
+      "sentences.s2": "Now I can...",
+      "sentences.s2.hint": "What new skill or ability have you gained?",
+      "sentences.s3": "I didn't know..., but now I know...",
+      "sentences.s3.hint": "Compare your understanding 'before' and 'after' the lesson.",
+      "sentences.s4": "I discovered for myself...",
+      "sentences.s4.hint": "Which idea or fact surprised you the most?",
+      "sentences.s5": "I changed my mind about...",
+      "sentences.s5.hint": "What did you think before, and what do you think now?",
+      "sentences.s6": "What I liked most...",
+      "sentences.s6.hint": "Which moment of the lesson did you remember best?",
+      "sentences.s7": "I want to learn more about...",
+      "sentences.s7.hint": "What interested you and what would you like to explore further?",
+      "pmi.title": "Plus – Minus – Interesting",
+      "pmi.desc": "Look at the lesson from three different angles. Be honest!",
+      "pmi.plus.title": "Plus",
+      "pmi.plus.desc": "What was good, useful, or interesting in the lesson? What did you like?",
+      "pmi.minus.title": "Minus",
+      "pmi.minus.desc": "What was unclear, difficult, or uninteresting?",
+      "pmi.curious.title": "Interesting",
+      "pmi.curious.desc": "What surprised you? What do you want to learn more about? What question remains?",
+      "pmi.example.title": "Example Answers",
+      "pmi.example.plus": "I liked...",
+      "pmi.example.minus": "It was hard to understand...",
+      "pmi.example.curious": "I wonder, how...?",
+      "traffic.title": "Learning Traffic Light",
+      "traffic.desc": "Choose the color that best describes your understanding of the topic right now.",
+      "traffic.green.title": "Green",
+      "traffic.green.desc": "I understand everything and can explain it to others",
+      "traffic.yellow.title": "Yellow",
+      "traffic.yellow.desc": "I understand part of it, but I have questions",
+      "traffic.red.title": "Red",
+      "traffic.red.desc": "I need help — a lot is unclear",
+      "traffic.msg.green": "🟢 Great! You've confidently mastered the topic. Maybe help your classmates?",
+      "traffic.msg.yellow": "🟡 Good! Write down your question — and ask the teacher to explain again.",
+      "traffic.msg.red": "🔴 Don't worry! Ask the teacher or classmates — we'll figure it out together.",
+      "growth.title": "Knowledge Growth",
+      "growth.desc": "Compare yourself 'before' and 'after' the lesson — feel how you've grown!",
+      "growth.before": "Before the Lesson",
+      "growth.before.q": "What did I NOT know / couldn't do at the start of the lesson?",
+      "growth.after": "After the Lesson",
+      "growth.after.q": "What do I know / can do NOW after the lesson?",
+      "growth.example.title": "Example Answer",
+      "growth.example.before": "I didn't know what ... is",
+      "growth.example.after": "Now I know that ...",
+      "cinquain.title": "Cinquain About the Lesson",
+      "cinquain.desc": "Create a five-line summary poem. It's creative and helps organize your thoughts!",
+      "cinquain.r1": "One key word — the lesson topic",
+      "cinquain.r2": "Two adjectives — describing the topic",
+      "cinquain.r3": "Three action words — what happens",
+      "cinquain.r4": "A 4–5 word phrase — the main idea",
+      "cinquain.r5": "One summary word",
+      "cinquain.example": "Example",
+      "cinquain.example.title": "Example Cinquain",
+      "moments.title": "Three Important Moments",
+      "moments.desc": "Recall and name three moments from the lesson: two serious ones and one fun or unusual.",
+      "moments.m1.title": "First Important Moment",
+      "moments.m1.desc": "What main thing did you understand or learn today?",
+      "moments.m1.ex": "«I understood that...»",
+      "moments.m2.title": "Second Important Moment",
+      "moments.m2.desc": "What other idea, fact, or skill did you remember today?",
+      "moments.m2.ex": "«I learned ...»",
+      "moments.m3.title": "Interesting or Fun Moment",
+      "moments.m3.desc": "What surprised you, made you laugh, or stood out as unusual?",
+      "moments.m3.ex": "«When I found out that ants can lift 50 times their own weight — that's incredible!»",
+      "tags.title": "Tag Cloud",
+      "tags.desc": "The class together builds a word cloud about the lesson. The teacher adds words from students — and the cloud grows!",
+      "tags.cloudTitle": "Words about today's lesson",
+      "tags.empty": "Start adding words — and a cloud will appear here ☁️",
+      "tags.inputPlaceholder": "Enter a word and press +",
+      "tags.add": "Add",
+      "tags.clear": "Clear",
+      "tags.exampleTitle": "Example Tag Words",
+      "tags.examples": "interesting · challenging · clear · useful · unexpected · teamwork · discovery · difficult · fun · surprise · new idea · thoughts · questions · obvious · creativity"
+    }
+  };
+
+  // ── PAGE SWITCHING ──
+  function show(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+
+    const page = document.getElementById('page-' + id);
+    if (page) page.classList.add('active');
+
+    const navBtns = document.querySelectorAll('.nav-btn');
+    navBtns.forEach(b => {
+      if (b.getAttribute('onclick') && b.getAttribute('onclick').includes("'" + id + "'")) {
+        b.classList.add('active');
+      }
+    });
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── LANGUAGE SWITCHING ──
+  function setLanguage(lang) {
+    // Update button states
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.lang === lang);
+    });
+
+    // Update all translatable elements
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.dataset.i18n;
+      if (translations[lang][key]) {
+        el.textContent = translations[lang][key];
+      }
+    });
+
+    // Update placeholders
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+      const key = el.dataset.i18nPlaceholder;
+      if (translations[lang][key]) {
+        el.placeholder = translations[lang][key];
+      }
+    });
+
+    // Update traffic light message if active
+    const tlMsg = document.getElementById('tl-msg');
+    if (tlMsg.textContent.trim()) {
+      const color = tlMsg.textContent.includes('🟢') ? 'green' : tlMsg.textContent.includes('🟡') ? 'yellow' : 'red';
+      if (translations[lang][`traffic.msg.${color}`]) {
+        tlMsg.textContent = translations[lang][`traffic.msg.${color}`];
+      }
+    }
+
+    // Save preference
+    localStorage.setItem('lesson-reflection-lang', lang);
+    document.documentElement.lang = lang;
+  }
+
+  // Load saved language on page load
+  document.addEventListener('DOMContentLoaded', () => {
+    const savedLang = localStorage.getItem('lesson-reflection-lang') || 'uk';
+    setLanguage(savedLang);
+  });
+
+  // ── TRAFFIC LIGHT ──
+  function lightUp(color) {
+    ['green', 'yellow', 'red'].forEach(c => {
+      document.getElementById('tl-' + c).classList.remove('lit');
+    });
+    document.getElementById('tl-' + color).classList.add('lit');
+
+    const currentLang = localStorage.getItem('lesson-reflection-lang') || 'uk';
+    const msgs = {
+      green: translations[currentLang]['traffic.msg.green'],
+      yellow: translations[currentLang]['traffic.msg.yellow'],
+      red: translations[currentLang]['traffic.msg.red']
+    };
+    document.getElementById('tl-msg').textContent = msgs[color];
+  }
+
+  // ── TAG CLOUD ──
+  let tags = [];
+  const colors = ['tc-0','tc-1','tc-2','tc-3','tc-4','tc-5','tc-6','tc-7'];
+
+  function addTag() {
+    const input = document.getElementById('tag-input');
+    const val = input.value.trim();
+    if (!val) return;
+    tags.push(val);
+    renderTags();
+    input.value = '';
+    input.focus();
+  }
+
+  function clearTags() {
+    tags = [];
+    renderTags();
+  }
+
+  function renderTags() {
+    const container = document.getElementById('tag-display');
+    const currentLang = localStorage.getItem('lesson-reflection-lang') || 'uk';
+    const emptyText = translations[currentLang]['tags.empty'];
+    
+    if (tags.length === 0) {
+      container.innerHTML = `<div style="color:var(--muted); font-family:'Trebuchet MS',sans-serif; font-size:0.95rem; padding:20px 0;">${emptyText}</div>`;
+      return;
+    }
+    container.innerHTML = '';
+    tags.forEach((tag, i) => {
+      const el = document.createElement('span');
+      el.className = 'cloud-tag ' + colors[i % colors.length];
+      const sizes = [1.0, 1.15, 0.9, 1.25, 1.0, 0.95, 1.1, 0.88];
+      el.style.fontSize = sizes[i % sizes.length] + 'rem';
+      el.textContent = tag;
+      el.title = 'Натисни, щоб видалити';
+      el.onclick = () => { tags.splice(i, 1); renderTags(); };
+      container.appendChild(el);
+    });
+  }
+</script>
+<!-- ── FOOTER ── -->
+<footer class="site-footer">
+  <div class="author">
+    <span data-i18n="footer.author">Автор</span>: 
+    <a href="https://codenamexxv.github.io/teacher/" target="_blank">Ігор Шуляк</a>
+  </div>
+</footer>
+</body>
+</html>
