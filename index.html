@@ -4,6 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Рефлексія уроку</title>
+<link rel="icon" type="image/png" href="https://raw.githubusercontent.com/CodenameXXV/ref/refs/heads/main/ref.png">
 <style>
 :root {
 --bg: #f5f3ef;
@@ -24,6 +25,52 @@ background: var(--bg);
 color: var(--text);
 min-height: 100vh;
 }
+/* ── FULLSCREEN BUTTON ── */
+.fs-toggle {
+position: fixed;
+top: 16px;
+right: 16px;
+z-index: 1000;
+width: 44px;
+height: 44px;
+border-radius: 50%;
+background: rgba(30,28,26,0.85);
+border: 2px solid rgba(255,255,255,0.3);
+display: flex;
+align-items: center;
+justify-content: center;
+cursor: pointer;
+transition: all 0.25s ease;
+box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+.fs-toggle:hover {
+background: rgba(30,28,26,1);
+transform: scale(1.08);
+box-shadow: 0 6px 24px rgba(0,0,0,0.3);
+border-color: rgba(255,255,255,0.6);
+}
+.fs-toggle:active { transform: scale(0.96); }
+.fs-toggle svg {
+width: 22px;
+height: 22px;
+fill: none;
+stroke: #fff;
+stroke-width: 2;
+stroke-linecap: round;
+stroke-linejoin: round;
+transition: transform 0.3s ease;
+}
+.fs-toggle.fullscreen svg {
+transform: rotate(180deg);
+}
+.fs-toggle .fs-icon-expand,
+.fs-toggle .fs-icon-collapse {
+position: absolute;
+transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.fs-toggle .fs-icon-collapse { opacity: 0; transform: scale(0.8); }
+.fs-toggle.fullscreen .fs-icon-expand { opacity: 0; transform: scale(0.8); }
+.fs-toggle.fullscreen .fs-icon-collapse { opacity: 1; transform: scale(1); }
 /* ── PAGE TRANSITION ── */
 .page {
 display: none;
@@ -130,8 +177,8 @@ to   { opacity: 1; transform: translateY(0); }
 }
 .chips {
     display: flex; flex-wrap: wrap; justify-content: center;
-    column-gap: 8px;  /* Відстань між кнопками в ряду (горизонтально) */
-    row-gap: 16px;     /* Відстань між рядками кнопок (вертикально) */
+    column-gap: 8px;
+    row-gap: 16px;
     max-width: 900px; margin: 0 auto;
     position: relative;
     animation: heroSlideIn 0.7s 0.2s ease both;
@@ -186,7 +233,7 @@ opacity: 0.8;
 .lang-switch {
 position: absolute;
 top: 16px;
-right: 20px;
+right: 76px;
 background: rgba(255,255,255,0.15);
 border: 1px solid rgba(255,255,255,0.3);
 border-radius: 24px;
@@ -1066,10 +1113,23 @@ transition: color 0.2s;
 .mindmap-controls { flex-direction: column; }
 .mm-input, .mm-btn { width: 100%; }
 .tree-visual-container { height: 350px; }
+.lang-switch { right: 70px; }
+.fs-toggle { width: 40px; height: 40px; }
+.fs-toggle svg { width: 20px; height: 20px; }
 }
 </style>
 </head>
 <body>
+<!-- Fullscreen Toggle Button -->
+<button class="fs-toggle" id="fsToggle" title="Повноекранний режим" aria-label="Toggle fullscreen">
+  <svg class="fs-icon-expand" viewBox="0 0 24 24">
+    <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+  </svg>
+  <svg class="fs-icon-collapse" viewBox="0 0 24 24">
+    <path d="M19 19h-6v6M5 5h6V-1M21 21l-7-7M3 3l7 7"/>
+  </svg>
+</button>
+
 <header class="hero">
 <div class="hero-particles" id="particles"></div>
 <div class="lang-switch">
@@ -1359,6 +1419,27 @@ transition: color 0.2s;
 </div>
 </footer>
 <script>
+/* ═══════════════════════════════════════════════
+FULLSCREEN TOGGLE
+═══════════════════════════════════════════════ */
+const fsToggle = document.getElementById('fsToggle');
+function toggleFullscreen() {
+if (!document.fullscreenElement) {
+document.documentElement.requestFullscreen().catch(err => {
+console.log(`Error attempting to enable fullscreen: ${err.message}`);
+});
+} else {
+if (document.exitFullscreen) {
+document.exitFullscreen();
+}
+}
+}
+fsToggle.addEventListener('click', toggleFullscreen);
+document.addEventListener('fullscreenchange', () => {
+fsToggle.classList.toggle('fullscreen', !!document.fullscreenElement);
+fsToggle.title = document.fullscreenElement ? 'Вийти з повноекранного режиму' : 'Повноекранний режим';
+fsToggle.setAttribute('aria-label', document.fullscreenElement ? 'Exit fullscreen' : 'Enter fullscreen');
+});
 /* ═══════════════════════════════════════════════
 TRANSLATIONS
 ═══════════════════════════════════════════════ */
